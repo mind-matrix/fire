@@ -1,0 +1,3 @@
+node_modules/
+web/fire/*
+!web/fire/dist

@@ -13,6 +13,7 @@ const { UPLOADS_DIR } = require('./constants.js');
 const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers } = require('./schema');
 const { Faculty, Student, Device, Room } = require('./model');
+const path = require('path');
 
 mongoose.connect('mongodb+srv://fire:S8i0XwsCHCxn09og@cluster0-84baf.mongodb.net/fire?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: false });
 
@@ -77,6 +78,8 @@ app.use(cors());
 
 app.use(bodyParser.json());
 app.use(compression());
+
+app.use(express.static(path.join(__dirname, 'fire-web/dist')));
 
 app.get('/document', async (req, res) => {
   var id = req.query.id;

@@ -83,11 +83,6 @@ app.use(compression());
 const staticFileMiddleware = express.static(path.join(__dirname, 'fire-web/dist'));
 
 app.use(staticFileMiddleware);
-app.use(history({
-  disableDotRule: true,
-  verbose: true
-}));
-app.use(staticFileMiddleware);
 
 app.get('/document', async (req, res) => {
   var id = req.query.id;

@@ -50,7 +50,7 @@
         </v-card>
         <v-container class="text-center">
           Not registered?
-          <v-btn link href="/#/register" small class="text-uppercase">
+          <v-btn link href="/register" small class="text-uppercase">
             register
           </v-btn>
         </v-container>

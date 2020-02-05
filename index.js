@@ -1,5 +1,6 @@
 const http = require('http');
 const express = require('express');
+const history = require('connect-history-api-fallback');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const cors = require('cors');
@@ -79,7 +80,14 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(compression());
 
-app.use(express.static(path.join(__dirname, 'fire-web/dist')));
+const staticFileMiddleware = express.static(path.join(__dirname, 'fire-web/dist'));
+
+app.use(staticFileMiddleware);
+app.use(history({
+  disableDotRule: true,
+  verbose: true
+}));
+app.use(staticFileMiddleware);
 
 app.get('/document', async (req, res) => {
   var id = req.query.id;

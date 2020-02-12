@@ -31,10 +31,10 @@ const server = new ApolloServer({
           client,
           async uploadFile (stream) {
             
-            if(!await fs.exists(`${UPLOADS_DIR}`)) {
-              await fs.mkdir(`${UPLOADS_DIR}`);
+            if(!fs.existsSync(`${UPLOADS_DIR}`)) {
+              fs.mkdirSync(`${UPLOADS_DIR}`);
             }
-            
+
             var id = uniqid();
             var path = `${UPLOADS_DIR}/${id}`;
             const writeStream = fs.createWriteStream(path);

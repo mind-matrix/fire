@@ -20,4 +20,6 @@ export const EVENT_REPEAT = 'EVENT_REPEAT';
 export const EVENT_CLEAR = 'EVENT_CLEAR';
 export const EVENT_CLEAR_REVERT = 'EVENT_CLEAR_REVERT';
 
+export const EVENT_SUBMIT_ANSWERS = 'EVENT_SUBMIT_ANSWERS';
+
 export const UPLOADS_DIR = 'uploads';

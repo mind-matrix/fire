@@ -5,6 +5,7 @@ const LSIResponseSchema = new Mongoose.Schema({
     _id: Mongoose.Schema.Types.ObjectId
   },
   Responses: [Number],
+  Score: Mongoose.Schema.Types.Mixed,
   Category: Mongoose.Schema.Types.Mixed
 });
 

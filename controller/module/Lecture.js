@@ -1,6 +1,6 @@
 import { ROOM_UPDATED } from '../../constants.js';
 
-const { EVENT_JOIN, EVENT_EXIT, EVENT_DOUBT, EVENT_EXPLAIN, EVENT_CLEAR, EVENT_CLEAR_REVERT, EVENT_REPEAT, EVENT_UPDATED, STUDENT_JOINED, STUDENT_EXITED } = require('../../constants.js');
+const { EVENT_JOIN, EVENT_RESOURCE_UPLOAD, EVENT_EXIT, EVENT_DOUBT, EVENT_EXPLAIN, EVENT_CLEAR, EVENT_CLEAR_REVERT, EVENT_REPEAT, EVENT_UPDATED, STUDENT_JOINED, STUDENT_EXITED } = require('../../constants.js');
 const { Student, Room, Task, StudentEvent, FacultyEvent, Module } = require('../../model');
 
 export default async function ({ task_id, _id, event, pubsub }) {

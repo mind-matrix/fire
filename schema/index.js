@@ -322,7 +322,7 @@ const resolvers = {
           pubsub: pubsub
         });
         pubsub.publish(EVENT_ADDED, { eventSub: event });
-        return event;
+        return event.save();
       }
     }
   },

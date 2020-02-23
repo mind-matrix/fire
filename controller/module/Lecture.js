@@ -36,7 +36,7 @@ export default async function ({ task_id, _id, event, pubsub }) {
       var task = await Task.findOne({ _id: task_id });
       var room = await Room.findOne({ _id: task.Room._id });
       var seat = { Row: student.LastSeatInfo.Row, Column: student.LastSeatInfo.Column };
-      if(room.Layout[seat.Row][seat.Column].Occupant && room.Layout[seat.Row][seat.Column].Occupant._id === student._id) {
+      if(room.Layout[seat.Row][seat.Column].Occupant && room.Layout[seat.Row][seat.Column].Occupant._id.equals(student._id)) {
         room.Layout[seat.Row][seat.Column].Occupant = null;
       }
       student.Active = false;

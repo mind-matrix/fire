@@ -106,6 +106,11 @@ export const typeDefs = gql`
 `;
 
 export const resolvers = {
+  Module: {
+    __resolveType (parent, args, context, info) {
+      return parent.Type;
+    }
+  },
   Event: {
     __resolveType (parent, args, context, info) {
       if (parent.Student) {
@@ -144,9 +149,6 @@ export const resolvers = {
     }
   },
   Lecture: {
-    __isTypeOf (parent, context, info) {
-      return 'Lecture';
-    },
     Course (parent, args, context, info) {
       return Course.findOne({ _id: parent.Course._id });
     },
@@ -164,9 +166,6 @@ export const resolvers = {
     }
   },
   CrowdTest: {
-    __isTypeOf (parent, context, info) {
-      return 'CrowdTest';
-    },
     Faculty (parent, args, context, info) {
       return Faculty.findOne({ _id: parent.Faculty._id });
     },
@@ -178,9 +177,6 @@ export const resolvers = {
     }
   },
   LSI: {
-    __isTypeOf (parent, context, info) {
-      return 'LSI';
-    },
     Faculty (parent, args, context, info) {
       return Faculty.findOne({ _id: parent.Faculty._id });
     },

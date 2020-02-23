@@ -9,4 +9,8 @@ const LSISchema = new Mongoose.Schema({
   }]
 });
 
+LSISchema.virtual('Type').get(function () {
+  return 'LSI';
+})
+
 module.exports = Mongoose.model("LSI", LSISchema);

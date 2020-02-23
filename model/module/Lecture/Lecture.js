@@ -20,4 +20,8 @@ const LectureSchema = new Mongoose.Schema({
   }]
 });
 
+LectureSchema.virtual('Type').get(function () {
+  return 'Lecture';
+})
+
 module.exports = Mongoose.model("Lecture", LectureSchema)

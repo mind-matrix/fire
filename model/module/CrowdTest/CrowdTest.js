@@ -21,4 +21,8 @@ const CrowdTestSchema = new Mongoose.Schema({
   }]
 });
 
+CrowdTestSchema.virtual('Type').get(function () {
+  return 'CrowdTest';
+})
+
 module.exports = Mongoose.model("CrowdTest", CrowdTestSchema);

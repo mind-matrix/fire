@@ -339,7 +339,7 @@ const resolvers = {
       subscribe: withFilter(
         () => pubsub.asyncIterator([ROOM_ADDED, ROOM_UPDATED, ROOM_REMOVED]),
         (payload, variables) => {
-          return !variables._id || (payload._id === variables._id);
+          return !variables._id || (payload.roomSub._id.toString() === variables._id);
         }
       )
     }

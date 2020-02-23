@@ -7,7 +7,6 @@ export default async function ({ task_id, _id, event, pubsub }) {
   if(event.Student) {
     if(event.Descriptor === EVENT_JOIN) {
       // Join
-      console.log('join');
       var student = await Student.findOne({ _id: event.Student._id });
       var task = await Task.findOne({ _id: task_id });
       var room = await Room.findOne({ _id: task.Room._id });
@@ -25,7 +24,7 @@ export default async function ({ task_id, _id, event, pubsub }) {
         room.Layout = JSON.parse(JSON.stringify(room.Layout));
         await Module.Lecture.Lecture.updateOne({ _id: _id }, { $addToSet: { Students: { _id: student._id } } });
         pubsub.publish(STUDENT_JOINED, { studentSub: student.save() });
-        pubsub.publish(ROOM_UPDATED, { roomSub: room.save() });
+        pubsub.publish(ROOM_UPDATED, { roomSub: await room.save() });
         return true;
       } else {
         return false;
@@ -39,9 +38,10 @@ export default async function ({ task_id, _id, event, pubsub }) {
       if(room.Layout[seat.Row][seat.Column].Occupant && room.Layout[seat.Row][seat.Column].Occupant._id.equals(student._id)) {
         room.Layout[seat.Row][seat.Column].Occupant = null;
       }
+      room.Layout = JSON.parse(JSON.stringify(room.Layout));
       student.Active = false;
       pubsub.publish(STUDENT_EXITED, { studentSub: student.save() });
-      pubsub.publish(ROOM_UPDATED, { roomSub: room.save() });
+      pubsub.publish(ROOM_UPDATED, { roomSub: await room.save() });
       return true;
     } else if(event.Descriptor === EVENT_DOUBT) {
       // Doubt

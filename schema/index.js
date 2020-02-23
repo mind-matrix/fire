@@ -207,6 +207,7 @@ const resolvers = {
           State: 'RUNNING',
           ObjectReferenceId: moduleInstance._id
         });
+        room.Available = false;
         room.Usage = {
           Faculty: {
             _id: context.client._id
@@ -258,6 +259,7 @@ const resolvers = {
             }
           }
           room.Layout = JSON.parse(JSON.stringify(room.Layout));
+          room.Available = true;
           room.Usage = null;
           pubsub.publish(ROOM_UPDATED, { roomSub: room.save() });
           task.State = "FINISHED";

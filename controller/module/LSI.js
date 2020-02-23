@@ -22,7 +22,7 @@ export default async function ({ task_id, _id, event, pubsub }) {
         }
       }
     });
-    var primaryCategory = Object.keys(scores).reduce((a, b) => obj[a] > obj[b] ? a : b);
+    var primaryCategory = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
     var response = new Module.LSI.LSIResponse({ Student: { _id: event.Student._id }, Responses: answers, Score: scores, Category: primaryCategory });
     var student = await Student.findOne({ _id: event.Student._id });
     student.ModuleData.LSI = {

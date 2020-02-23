@@ -16,7 +16,7 @@ export const typeDefs = gql`
     Email: String
     Device: Device!
     Active: Boolean
-    SeatingHistory (room_id:ID): [SeatHistory]
+    SeatingHistory: [SeatHistory]
     DisplayPicture: Document
     RegisteredCourses: [Course]
     ModuleData: ModuleData
@@ -42,9 +42,6 @@ export const resolvers = {
       return parent.map(v => Course.findOne({ _id: v._id }));
     },
     SeatingHistory (parent, args, context, info) {
-      if (args.room_id) {
-        return parent.SeatingHistory.filter(v => v.Room._id === args.room_id);
-      }
       return parent.SeatingHistory;
     }
   }

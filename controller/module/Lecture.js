@@ -23,11 +23,6 @@ export default async function ({ task_id, _id, event, pubsub }) {
         student.SeatingHistory.addToSet(info);
         room.Layout[event.Data.Row][event.Data.Column].Occupant = { _id: student._id }; 
         room.Layout = JSON.parse(JSON.stringify(room.Layout));
-        /* room.updateOne({
-          $set: {
-            [`Layout.${ event.Data.Row }.${ event.Data.Column }.Occupant`]: { _id: student._id }
-          }
-        }); */
         await Module.Lecture.Lecture.updateOne({ _id: _id }, { $addToSet: { Students: { _id: student._id } } });
         pubsub.publish(STUDENT_JOINED, { studentSub: student.save() });
         pubsub.publish(ROOM_UPDATED, { roomSub: room.save() });
@@ -40,6 +35,10 @@ export default async function ({ task_id, _id, event, pubsub }) {
       var student = await Student.findOne({ _id: event.Student._id });
       var task = await Task.findOne({ _id: task_id });
       var room = await Room.findOne({ _id: task.Room._id });
+      var seat = { Row: student.LastSeatInfo.Row, Column: student.LastSeatInfo.Column };
+      if(room.Layout[seat.Row][seat.Column].Occupant && room.Layout[seat.Row][seat.Column].Occupant._id === student._id) {
+        room.Layout[seat.Row][seat.Column].Occupant = null;
+      }
       student.Active = false;
       pubsub.publish(STUDENT_EXITED, { studentSub: student.save() });
       pubsub.publish(ROOM_UPDATED, { roomSub: room.save() });

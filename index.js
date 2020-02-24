@@ -15,6 +15,8 @@ const { typeDefs, resolvers } = require('./schema');
 const { Faculty, Student, Device, Room } = require('./model');
 const path = require('path');
 
+import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
+
 mongoose.connect('mongodb+srv://fire:S8i0XwsCHCxn09og@cluster0-84baf.mongodb.net/fire?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: false });
 
 const server = new ApolloServer({
@@ -239,6 +241,8 @@ app.post('/student/login', async (req, res) => {
     res.send({ error: "No such account exists" })
   }
 });
+
+app.use('/docs', voyagerMiddleware({ endpointUrl: '/graphql' }));
 
 server.applyMiddleware({ app });
 

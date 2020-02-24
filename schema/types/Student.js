@@ -43,6 +43,9 @@ export const resolvers = {
     },
     SeatingHistory (parent, args, context, info) {
       return parent.SeatingHistory;
+    },
+    ModuleData (parent, args, context, info) {
+      return parent.ModuleData;
     }
   }
 };

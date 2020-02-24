@@ -23,8 +23,7 @@ const StudentSchema = new Mongoose.Schema({
   }],
   DisplayPicture: Mongoose.Schema.Types.Mixed,
   ModuleData: {
-    type: Map,
-    of: Mongoose.Schema.Types.Mixed
+    type: Mongoose.Schema.Types.Mixed
   }
 });
 StudentSchema.methods.getDevices = function(_id) {

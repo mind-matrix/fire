@@ -26,6 +26,11 @@ export const typeDefs = gql`
 `;
 
 export const resolvers = {
+  ModuleData: {
+    LSI (parent, args, context, info) {
+      return parent.LSI;
+    }
+  },
   LectureInfo: {
     StudentEvents (parent, args, context, info) {
       return parent.StudentEvents.map(v => StudentEvent.findOne({ _id: v._id }));
@@ -40,6 +45,11 @@ export const resolvers = {
     },
     Responses (parent, args, context, info) {
       return parent.Responses.map(v => Module.CrowdTest.CrowdResponse.findOne({ _id: v._id }));
+    }
+  },
+  LSIInfo: {
+    Category (parent, args, context, info) {
+      return parent.Category;
     }
   }
 };

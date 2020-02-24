@@ -216,8 +216,7 @@ const resolvers = {
             _id: task._id
           }
         };
-        pubsub.publish(ROOM_UPDATED, { roomSub: room });
-        room.save();
+        pubsub.publish(ROOM_UPDATED, { roomSub: await room.save() });
         moduleInstance.save();
         pubsub.publish(TASK_UPDATE, { taskSub: task });
         return task.save();
@@ -261,7 +260,7 @@ const resolvers = {
           room.Layout = JSON.parse(JSON.stringify(room.Layout));
           room.Available = true;
           room.Usage = null;
-          pubsub.publish(ROOM_UPDATED, { roomSub: room.save() });
+          pubsub.publish(ROOM_UPDATED, { roomSub: await room.save() });
           task.State = "FINISHED";
           pubsub.publish(TASK_UPDATE, { taskSub: task });
         }

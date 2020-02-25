@@ -55,16 +55,26 @@ export default async function ({ task_id, _id, event, pubsub }) {
     } else if(event.Descriptor === EVENT_CLEAR) {
       // Clear
       var ref = await StudentEvent.findOne({ _id: event.Data.Reference_id });
-      ref.Data.SoftDelete = true;
+      if(ref.Data) {
+        ref.Data.SoftDelete = true;
+      } else {
+        ref.Data = { SoftDelete: true };
+      }
       pubsub.publish(EVENT_UPDATED, { eventSub: ref.save() });
       return true;
     } else if(event.Descriptor === EVENT_CLEAR_REVERT) {
       // Revert Clear
       var clear = await StudentEvent.findOne({ _id: event.Data.Reference_id, Descriptor: EVENT_CLEAR });
       var ref = await StudentEvent.findOne({ _id: clear.Data.Reference_id });
-      clear.Data.SoftDelete = true;
+      if(clear.Data) {
+        clear.Data.SoftDelete = true;
+      } else {
+        clear.Data = { SoftDelete: true };
+      }
       clear.save();
-      ref.Data.SoftDelete = false;
+      if(ref.Data) {
+        ref.Data.SoftDelete = false;
+      }
       pubsub.publish(EVENT_UPDATED, { eventSub: ref.save() });
       return true;
     } else {
@@ -76,15 +86,25 @@ export default async function ({ task_id, _id, event, pubsub }) {
     } else if(event.Descriptor === EVENT_CLEAR_REVERT) {
       var clear = await FacultyEvent.findOne({ _id: event.Data.Reference_id, Descriptor: EVENT_CLEAR });
       var ref = await StudentEvent.findOne({ _id: clear.Data.Reference_id });
-      clear.Data.SoftDelete = true;
+      if(clear.Data) {
+        clear.Data.SoftDelete = true;
+      } else {
+        clear.Data = { SoftDelete: true };
+      }
       clear.save();
-      ref.Data.SoftDelete = false;
+      if(ref.Data) {
+        ref.Data.SoftDelete = false;
+      }
       pubsub.publish(EVENT_UPDATED, { eventSub: ref.save() });
       return true;
     } else if(event.Descriptor === EVENT_CLEAR) {
       // Clear
       var ref = await StudentEvent.findOne({ _id: event.Data.Reference_id });
-      ref.Data.SoftDelete = true;
+      if(ref.Data) {
+        ref.Data.SoftDelete = true;
+      } else {
+        ref.Data = { SoftDelete: true };
+      }
       pubsub.publish(EVENT_UPDATED, { eventSub: ref.save() });
       return true;
     } else {

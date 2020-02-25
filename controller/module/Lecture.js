@@ -71,11 +71,11 @@ export default async function ({ task_id, _id, event, pubsub }) {
       } else {
         clear.Data = { SoftDelete: true };
       }
-      clear.save();
       if(ref.Data) {
         ref.Data.SoftDelete = false;
       }
       pubsub.publish(EVENT_UPDATED, { eventSub: ref.save() });
+      pubsub.publish(EVENT_UPDATED, { eventSub: clear.save() });
       return true;
     } else {
       return false;
@@ -91,11 +91,11 @@ export default async function ({ task_id, _id, event, pubsub }) {
       } else {
         clear.Data = { SoftDelete: true };
       }
-      clear.save();
       if(ref.Data) {
         ref.Data.SoftDelete = false;
       }
       pubsub.publish(EVENT_UPDATED, { eventSub: ref.save() });
+      pubsub.publish(EVENT_UPDATED, { eventSub: clear.save() });
       return true;
     } else if(event.Descriptor === EVENT_CLEAR) {
       // Clear

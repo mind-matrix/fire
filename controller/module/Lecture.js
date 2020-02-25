@@ -81,6 +81,12 @@ export default async function ({ task_id, _id, event, pubsub }) {
       ref.Data.SoftDelete = false;
       pubsub.publish(EVENT_UPDATED, { eventSub: ref.save() });
       return true;
+    } else if(event.Descriptor === EVENT_CLEAR) {
+      // Clear
+      var ref = await StudentEvent.findOne({ _id: event.Data.Reference_id });
+      ref.Data.SoftDelete = true;
+      pubsub.publish(EVENT_UPDATED, { eventSub: ref.save() });
+      return true;
     } else {
       return false;
     }

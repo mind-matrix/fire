@@ -4,6 +4,12 @@ const CrowdTestSchema = new Mongoose.Schema({
   Faculty: {
     _id: Mongoose.Schema.Types.ObjectId
   },
+  Students: [{
+    _id: { type: Mongoose.Schema.Types.ObjectId }
+  }],
+  StudentEvents: [{
+    _id: { type: Mongoose.Schema.Types.ObjectId }
+  }],
   Questions: [{
     _id: Mongoose.Schema.Types.ObjectId
   }],
@@ -15,6 +21,10 @@ const CrowdTestSchema = new Mongoose.Schema({
   },
   Dispatch: {
     type: Mongoose.Schema.Types.Date
+  },
+  Dispatched: {
+    type: Boolean,
+    default: false
   },
   Responses: [{
     _id: Mongoose.Schema.Types.ObjectId

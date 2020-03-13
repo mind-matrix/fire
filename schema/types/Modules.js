@@ -4,6 +4,7 @@ require('graphql-iso-date');
 const { Student, Course, Room, Faculty, Module, StudentEvent, FacultyEvent } = require('../../model');
 
 import LectureEventHandler from '../../controller/module/Lecture'
+import CrowdTestEventHandler from '../../controller/module/CrowdTest'
 import LSIEventHandler from '../../controller/module/LSI'
 
 export const typeDefs = gql`
@@ -204,7 +205,8 @@ export const eventCallbacks = {
     }
   },
   async CrowdTest({task_id, _id, event, pubsub}) {
-    
+    var crowdtest = await Module.CrowdTest.CrowdTest.findOne({ _id: _id });
+    return await CrowdTestEventHandler({ task_id, _id, event, pubsub });
   },
   async LSI({task_id, _id, event, pubsub}) {
     var lsi = await Module.LSI.LSI.findOne({ _id: _id });

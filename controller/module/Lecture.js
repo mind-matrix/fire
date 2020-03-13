@@ -29,7 +29,7 @@ export default async function ({ task_id, _id, event, pubsub }) {
       } else {
         return false;
       }
-    } if(event.Descriptor === EVENT_EXIT) {
+    } else if(event.Descriptor === EVENT_EXIT) {
       // Exit
       var student = await Student.findOne({ _id: event.Student._id });
       var task = await Task.findOne({ _id: task_id });

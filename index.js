@@ -17,7 +17,9 @@ const path = require('path');
 
 import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 
-mongoose.connect('mongodb+srv://fire:S8i0XwsCHCxn09og@cluster0-84baf.mongodb.net/fire?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: false });
+// mongoose.connect('mongodb+srv://fire:S8i0XwsCHCxn09og@cluster0-84baf.mongodb.net/fire?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: false });
+
+mongoose.connect('mongodb://localhost:27017/fire', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const server = new ApolloServer({
   typeDefs,
@@ -195,6 +197,7 @@ app.post('/student/register', (req, res) => {
 });
 
 app.post('/student/request', async (req, res) => {
+  console.log(req.body.identifier);
   var identifier = req.body.identifier;
   var student = await Student.findOne({
     Identifier: identifier
@@ -226,7 +229,6 @@ app.post('/student/login', async (req, res) => {
   var student = await Student.findOne({ Identifier: identifier });
   if(student) {
     var device = await Device.findOne({ _id: student.Device._id });
-    console.log(device.verifyOTP(otp));
     if(device.verifyOTP(otp)) {
       res.send({
         token: Authorizer.sign({

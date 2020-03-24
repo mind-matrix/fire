@@ -32,12 +32,19 @@ const typeDefs = gql`
     DisplayPicture: Upload
   }
 
+  type LastSeatInfo {
+    Room: Room
+    Row: Int
+    Column: Int
+    Course: Course
+  }
+
   type Query {
     Student: Student!
     AllStudents: [Student!]!
     RegisteredStudents (Course_id: ID!): [Student!]!
     Faculty: Faculty!
-    Room (_id: ID, Name: String): Room!
+    Room (_id: ID, Name: String, Course_id: ID): Room!
     AllRooms: [Room]
     AvailableRooms: [Room]
     Course (_id: ID, Code: String): Course!
@@ -45,6 +52,7 @@ const typeDefs = gql`
     Task (_id: ID!): Task!
     AllTasks: [Task]
     RunningTasks: [Task]
+    LastSeat(Course_id: ID): LastSeatInfo
   }
 
   type Mutation {
@@ -121,6 +129,27 @@ const resolvers = {
     async RunningTasks (parent, args, context, info) {
       if (context.client && context.client.type === 'faculty')
         return await Task.find({ State: { $ne: "FINISHED" }, "Faculty._id": context.client._id });
+    },
+    async LastSeat (parent, args, context, info) {
+      if(context.client && context.client.type === 'student') {
+        var student = await Student.findOne({ _id: context.client._id });
+        let lastSeat = null;
+        if(args.Course_id) {
+          for(var seat of student.SeatingHistory) {
+            if(seat.Course && seat.Course._id === args.Course_id) {
+              lastSeat = seat;
+            }
+          }
+        } else {
+          lastSeat = student.SeatingHistory[student.SeatingHistory.length - 1];
+        }
+        return {
+          Room: await Room.findOne({ _id: lastSeat.Room._id }),
+          Row: lastSeat.Row,
+          Column: lastSeat.Column,
+          Course: (lastSeat.Course) ? await Course.findOne({ _id: lastSeat.Course._id }) : null
+        };
+      }
     }
   },
   Mutation: {

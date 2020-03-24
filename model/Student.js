@@ -11,12 +11,14 @@ const StudentSchema = new Mongoose.Schema({
   LastSeatInfo: {
     Room: { _id: Mongoose.Schema.Types.ObjectId },
     Row: Number,
-    Column: Number
+    Column: Number,
+    Course: { _id: Mongoose.Schema.Types.ObjectId }
   },
   SeatingHistory: [{
     Room: { _id: Mongoose.Schema.Types.ObjectId },
     Row: Number,
-    Column: Number
+    Column: Number,
+    Course: { _id: Mongoose.Schema.Types.ObjectId }
   }],
   RegisteredCourses: [{
     _id: Mongoose.Schema.Types.ObjectId

@@ -73,9 +73,7 @@ export default async function ({ task_id, _id, event, pubsub }) {
           }
         };
       } else {
-        student.ModuleData.LSI = {
-          Category: primaryCategory
-        };
+        await student.update({ 'ModuleData.LSI.Category': primaryCategory })
       }
       await student.save();
       return response.save();

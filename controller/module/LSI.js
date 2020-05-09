@@ -77,7 +77,7 @@ export default async function ({ task_id, _id, event, pubsub }) {
           Category: primaryCategory
         };
       }
-      student.save();
+      await student.save();
       return response.save();
     }
   }

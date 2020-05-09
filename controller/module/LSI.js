@@ -9,7 +9,7 @@ export default async function ({ task_id, _id, event, pubsub }) {
       // Join
       var student = await Student.findOne({ _id: event.Student._id });
       var task = await Task.findOne({ _id: task_id });
-      var lecture = await Module.Lecture.Lecture.findOne({ _id: _id });
+      var lsi = await Module.LSI.LSI.findOne({ _id: _id });
       var room = await Room.findOne({ _id: task.Room._id });
       var seat = room.Layout[event.Data.Row][event.Data.Column];
       if(seat.Seat && (!seat.Occupant || !seat.Occupant._id)) {
@@ -17,15 +17,14 @@ export default async function ({ task_id, _id, event, pubsub }) {
         var info = {
           Room: { _id: room._id },
           Row: event.Data.Row,
-          Column: event.Data.Column,
-          Course: { _id: lecture.Course._id }
+          Column: event.Data.Column
         };
         student.LastSeatInfo = info;
         student.SeatingHistory.addToSet(info);
         room.Layout[event.Data.Row][event.Data.Column].Occupant = { _id: student._id }; 
         room.Layout = JSON.parse(JSON.stringify(room.Layout));
-        lecture.Students.addToSet({ _id: student._id });
-        await lecture.save();
+        lsi.Students.addToSet({ _id: student._id });
+        await lsi.save();
         pubsub.publish(STUDENT_JOINED, { studentSub: student.save() });
         pubsub.publish(ROOM_UPDATED, { roomSub: await room.save() });
         return true;

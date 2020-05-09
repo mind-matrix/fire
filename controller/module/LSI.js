@@ -1,7 +1,7 @@
 import { EVENT_JOIN, EVENT_EXIT, EVENT_SUBMIT_ANSWERS } from '../../constants.js';
 import marking from './marking.js';
 
-import { Student, Module } from '../../model';
+import { Student, Module, Task, Room } from '../../model';
 
 export default async function ({ task_id, _id, event, pubsub }) {
   if(event.Student) {

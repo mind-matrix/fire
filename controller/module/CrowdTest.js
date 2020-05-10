@@ -76,6 +76,7 @@ export default async function ({ task_id, _id, event, pubsub }) {
       }
       let distribution = await Distributor(students, questions);
       console.log(distribution);
+      return true;
     } else if(event.Descriptor === EVENT_END_TEST) {
 
     }

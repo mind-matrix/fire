@@ -88,11 +88,13 @@ export const typeDefs = gql`
   type CrowdTest {
     _id: ID!
     Faculty: Faculty!
+    Course: Course!
     Questions: [CrowdQuestion]
     Start: DateTime
     End: DateTime
     Dispatch: DateTime
     Responses: [CrowdResponse]
+    Students: [Student]
     StudentEvents: [StudentEvent]
     FacultyEvents: [FacultyEvent]
   }
@@ -167,11 +169,23 @@ export const resolvers = {
     }
   },
   CrowdTest: {
+    Course (parent, args, context, info) {
+      return Course.findOne({ _id: parent.Course._id });
+    },
     Faculty (parent, args, context, info) {
       return Faculty.findOne({ _id: parent.Faculty._id });
     },
     Questions (parent, args, context, info) {
       return parent.Questions.map(v => Module.CrowdTest.CrowdQuestion.findOne({ _id: v._id }));
+    },
+    Students (parent, args, context, info) {
+      return parent.Students.map(v => Student.findOne({ _id: v._id }));
+    },
+    StudentEvents (parent, args, context, info) {
+      return parent.StudentEvents.map(v => StudentEvent.findOne({ _id: v._id }));
+    },
+    FacultyEvents (parent, args, context, info) {
+      return parent.FacultyEvents.map(v => FacultyEvent.findOne({ _id: v._id }));
     },
     Responses (parent, args, context, info) {
       return parent.Responses.map(v => Module.CrowdTest.CrowdResponse.findOne({ _id: v._id }));

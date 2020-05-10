@@ -4,6 +4,9 @@ const CrowdTestSchema = new Mongoose.Schema({
   Faculty: {
     _id: Mongoose.Schema.Types.ObjectId
   },
+  Course: {
+    _id: Mongoose.Schema.Types.ObjectId
+  },
   Students: [{
     _id: { type: Mongoose.Schema.Types.ObjectId }
   }],

@@ -14,7 +14,7 @@ import { typeDefs as taskTypeDefs, resolvers as taskResolvers } from './types/Ta
 import  { typeDefs as moduleDataTypeDefs, resolvers as moduleDataResolvers } from './types/ModuleData.js';
 import { typeDefs as moduleTypeDefs, resolvers as moduleResolvers, eventCallbacks as moduleEventCallbacks } from './types/Modules.js';
 
-import { EVENT_ADDED, EVENT_UPDATED, EVENT_DELETED, ROOM_ADDED, ROOM_REMOVED, ROOM_UPDATED, TASK_UPDATE } from '../constants.js';
+import { EVENT_ADDED, EVENT_UPDATED, EVENT_DELETED, EVENT_QUESTION_BATCH, ROOM_ADDED, ROOM_REMOVED, ROOM_UPDATED, TASK_UPDATE } from '../constants.js';
 
 const pubsub = new PubSub();
 
@@ -361,7 +361,19 @@ const resolvers = {
       subscribe: () => pubsub.asyncIterator([TASK_UPDATE]),
     },
     eventSub: {
-      subscribe: () => pubsub.asyncIterator([EVENT_ADDED]),
+      subscribe: withFilter(
+        () => pubsub.asyncIterator([EVENT_ADDED]),
+        (payload, variables, context) => {
+          if (context.client && context.client.type === 'student' && payload.eventSub.Descriptor === EVENT_QUESTION_BATCH) {
+            if (payload.eventSub.Data._id === context.client._id) {
+              return true;
+            } else {
+              return false;
+            }
+          }
+          return true;
+        }
+      )
     },
     roomSub: {
       subscribe: withFilter(

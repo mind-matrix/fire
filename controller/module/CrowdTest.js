@@ -1,7 +1,7 @@
 import { ROOM_UPDATED } from '../../constants.js';
 import Distributor from '../../lib/Distributor'
 
-const { EVENT_JOIN, EVENT_EXIT, EVENT_SUBMIT_QUESTION, EVENT_SUBMIT_ANSWER, EVENT_EDIT_QUESTION, EVENT_DISPATCH_QUESTIONS, STUDENT_JOINED, STUDENT_EXITED } = require('../../constants.js');
+const { EVENT_ADDED, EVENT_JOIN, EVENT_EXIT, EVENT_SUBMIT_QUESTION, EVENT_QUESTION_BATCH, EVENT_SUBMIT_ANSWER, EVENT_EDIT_QUESTION, EVENT_DISPATCH_QUESTIONS, STUDENT_JOINED, STUDENT_EXITED } = require('../../constants.js');
 const { Student, Room, Task, StudentEvent, FacultyEvent, Module } = require('../../model');
 
 export default async function ({ task_id, _id, event, pubsub }) {
@@ -74,8 +74,20 @@ export default async function ({ task_id, _id, event, pubsub }) {
       for(let q of test.Questions) {
         questions.push(await Module.CrowdTest.CrowdQuestion.findOne({ _id: q._id }));
       }
-      let distribution = await Distributor(students, questions);
-      console.log(distribution);
+      let distributions = await Distributor(students, questions);
+      for(let batch of distributions) {
+        let e = {
+          Descriptor: EVENT_QUESTION_BATCH,
+          Data: {
+            _id: batch.student._id,
+            Questions: batch.questions
+          },
+          Faculty: {
+            _id: event.Faculty._id
+          }
+        };
+        pubsub.publish(EVENT_ADDED, { eventSub: e });
+      }
       return true;
     } else if(event.Descriptor === EVENT_END_TEST) {
 

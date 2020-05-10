@@ -50,7 +50,7 @@ export default async function ({ task_id, _id, event, pubsub }) {
     }
   } else {
     if(event.Descriptor === EVENT_EDIT_QUESTION) {
-
+      
     } else if(event.Descriptor === EVENT_DISPATCH_QUESTIONS) {
 
     } else if(event.Descriptor === EVENT_END_TEST) {

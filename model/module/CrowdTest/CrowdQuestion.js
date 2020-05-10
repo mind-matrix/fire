@@ -8,7 +8,13 @@ const CrowdQuestionSchema = new Mongoose.Schema({
   Options: [String],
   Correct: Number,
   Difficulty: Number,
-  Tags: [String]
+  Tags: [String],
+  Timestamp: {
+    type: Mongoose.Schema.Types.Date,
+    default: function () {
+      return new Date();
+    }
+  }
 });
 
 module.exports = Mongoose.model("CrowdQuestion", CrowdQuestionSchema);

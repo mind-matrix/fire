@@ -51,6 +51,7 @@ export const typeDefs = gql`
     Correct: Int
     Difficulty: Int
     Tags: [String!]!
+    Timestamp: DateTime
   }
   
   type CrowdResponse {

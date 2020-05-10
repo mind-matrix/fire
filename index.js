@@ -153,7 +153,7 @@ app.get('/faculty/validateUsername', async (req, res) => {
   }
 });
 
-app.post('/student/register', (req, res) => {
+app.post('/student/register', async (req, res) => {
   var name = req.body.name;
   var identifier = req.body.identifier;
   var email = req.body.email || null;
@@ -178,8 +178,8 @@ app.post('/student/register', (req, res) => {
     _id: device._id
   };
   var otp = device.generateOTP();
-  device.save();
-  student.save();
+  await device.save();
+  await student.save();
   /* Authorizer.sendOTP(otp, deviceInfo.number).then(() => {
     res.send({
       created: true,

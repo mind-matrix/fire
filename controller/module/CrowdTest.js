@@ -1,4 +1,5 @@
 import { ROOM_UPDATED } from '../../constants.js';
+import Distributor from '../../lib/Distributor'
 
 const { EVENT_JOIN, EVENT_EXIT, EVENT_SUBMIT_QUESTION, EVENT_SUBMIT_ANSWER, EVENT_EDIT_QUESTION, EVENT_DISPATCH_QUESTIONS, STUDENT_JOINED, STUDENT_EXITED } = require('../../constants.js');
 const { Student, Room, Task, StudentEvent, FacultyEvent, Module } = require('../../model');
@@ -22,7 +23,7 @@ export default async function ({ task_id, _id, event, pubsub }) {
         student.SeatingHistory.addToSet(info);
         room.Layout[event.Data.Row][event.Data.Column].Occupant = { _id: student._id }; 
         room.Layout = JSON.parse(JSON.stringify(room.Layout));
-        await Module.Lecture.Lecture.updateOne({ _id: _id }, { $addToSet: { Students: { _id: student._id } } });
+        await Module.CrowdTest.CrowdTest.updateOne({ _id: _id }, { $addToSet: { Students: { _id: student._id } } });
         pubsub.publish(STUDENT_JOINED, { studentSub: student.save() });
         pubsub.publish(ROOM_UPDATED, { roomSub: await room.save() });
         return true;
@@ -44,15 +45,37 @@ export default async function ({ task_id, _id, event, pubsub }) {
       pubsub.publish(ROOM_UPDATED, { roomSub: await room.save() });
       return true;
     } else if(event.Descriptor === EVENT_SUBMIT_QUESTION) {
-      
+      let question = new Module.CrowdTest.CrowdQuestion({
+        Text: event.Data.Text,
+        Author: {
+          _id: event.Student._id
+        },
+        Options: event.Data.Options,
+        Correct: event.Data.Correct,
+        Difficulty: 0,
+        Tags: []
+      });
+      await Module.CrowdTest.CrowdTest.updateOne({ _id: _id }, { $addToSet: { Questions: { _id: question._id } } });
+      await question.save();
+      return true;
     } else if(event.Descriptor === EVENT_SUBMIT_ANSWER) {
-
+      
     }
   } else {
     if(event.Descriptor === EVENT_EDIT_QUESTION) {
       
     } else if(event.Descriptor === EVENT_DISPATCH_QUESTIONS) {
-
+      let test = await Module.CrowdTest.CrowdTest.findOne({ _id });
+      let students = [];
+      for(let st of test.Students) {
+        students.push(await Student.findOne({ _id: st._id }));
+      }
+      let questions = [];
+      for(let q of test.Questions) {
+        questions.push(await Module.CrowdTest.CrowdQuestion.findOne({ _id: q._id }));
+      }
+      let distribution = await Distributor(students, questions);
+      console.log(distribution);
     } else if(event.Descriptor === EVENT_END_TEST) {
 
     }

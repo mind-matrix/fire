@@ -62,7 +62,6 @@ const server = new ApolloServer({
 });
 
 server.subscriptionServerOptions.onDisconnect = async (ws, context) => {
-  console.log('Client disconnected');
   if (context.client) {
     if(context.client === 'faculty') {
       // handle for faculty
@@ -177,9 +176,9 @@ app.post('/student/register', async (req, res) => {
   student.Device = {
     _id: device._id
   };
-  var otp = device.generateOTP();
   await device.save();
   await student.save();
+  var otp = device.generateOTP();
   /* Authorizer.sendOTP(otp, deviceInfo.number).then(() => {
     res.send({
       created: true,
@@ -197,30 +196,30 @@ app.post('/student/register', async (req, res) => {
 });
 
 app.post('/student/request', async (req, res) => {
-  console.log(req.body.identifier);
   var identifier = req.body.identifier;
   var student = await Student.findOne({
     Identifier: identifier
   });
-  var device = await Device.findOne({
-    _id: student.Device._id
-  });
-  var otp = device.generateOTP();
-  device.save();
-  /* Authorizer.sendOTP(otp, deviceInfo.number).then(() => {
+  if(student) {
+    var device = await Device.findOne({ _id: student.Device._id }, { OTPSecret: 1 });
+    var otp = device.generateOTP();
+    /* Authorizer.sendOTP(otp, deviceInfo.number).then(() => {
+      res.send({
+        created: true,
+        otp: otp
+      });
+    }).catch((e) => {
+      res.send({
+        error: e
+      })
+    }); */
     res.send({
       created: true,
       otp: otp
     });
-  }).catch((e) => {
-    res.send({
-      error: e
-    })
-  }); */
-  res.send({
-    created: true,
-    otp: otp
-  });
+  } else {
+    res.send({ error: "No such account exists" });
+  }
 });
 
 app.post('/student/login', async (req, res) => {
@@ -228,7 +227,7 @@ app.post('/student/login', async (req, res) => {
   var identifier = req.body.identifier;
   var student = await Student.findOne({ Identifier: identifier });
   if(student) {
-    var device = await Device.findOne({ _id: student.Device._id });
+    var device = await Device.findOne({ _id: student.Device._id }, { OTPSecret: 1 });
     if(device.verifyOTP(otp)) {
       res.send({
         token: Authorizer.sign({

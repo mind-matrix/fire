@@ -115,7 +115,7 @@ export default async function ({ task_id, _id, event, pubsub }) {
           console.log(v.Author._id, student._id);
           return v.Author._id.toString() === student._id.toString();
         });
-        let score = filteredResponses.map(v => v.Score).reduce((a,v) => a + v);
+        let score = filteredResponses.map(v => v.Score).reduce((a,v) => a + v, 0);
         let e = new FacultyEvent({
           Descriptor: EVENT_TEST_RESULT,
           Data: {

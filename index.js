@@ -12,7 +12,7 @@ const { UPLOADS_DIR } = require('./constants.js');
 
 const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers } = require('./schema');
-const { Faculty, Student, Device, Room } = require('./model');
+const { Faculty, Student, Device, Room, Feedback } = require('./model');
 const path = require('path');
 
 import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
@@ -86,6 +86,40 @@ app.use(cors());
 
 app.use(bodyParser.json());
 app.use(compression());
+
+app.get('/susreport/basic', async (req, res) => {
+  let feedbacks = await Feedback.find({});
+  let average = feedbacks.reduce((a, v) => a + v, 0) / feedbacks.length;
+  let count = feedbacks.length;
+  let severity = ( average >= 80.3 ) ? 'A' : (average >= 68) ? 'B' : (average > 51) ? 'C' : 'F';
+  res.send({
+    average,
+    count,
+    severity
+  })
+});
+
+app.get('/susreport/advanced', async (req, res) => {
+  let feedbacks = await Feedback.find({});
+  let details = {
+    individual_averages: feedbacks.reduce((a, v, i) => {
+        a[i] += v[i];
+      }, Array(10).fill(0)).map((v) => v / feedbacks.length),
+    count: {
+      student: feedbacks.filter((v) => v.Account.Type === "Student").length,
+      faculty: feedbacks.filter((v) => v.Account.Type === "Faculty").length
+    }
+  };
+  let average = feedbacks.reduce((a, v) => a + v, 0) / feedbacks.length;
+  let count = feedbacks.length;
+  let severity = ( average >= 80.3 ) ? 'A' : (average >= 68) ? 'B' : (average > 51) ? 'C' : 'F';
+  res.send({
+    average,
+    count,
+    severity,
+    details
+  });
+});
 
 app.get('/document', async (req, res) => {
   var id = req.query.id;
@@ -253,4 +287,4 @@ server.installSubscriptionHandlers(httpServer);
 httpServer.listen(80, () => {
   console.log(`Server running at ${ server.graphqlPath }`);
   console.log(`Subscription Server running at ${ server.subscriptionsPath }`);
-})
+});

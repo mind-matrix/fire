@@ -3,7 +3,7 @@ const { merge } = require('lodash');
 const { GraphQLDateTime } = require('graphql-iso-date');
 const { GraphQLJSON } = require('graphql-type-json');
 
-const { Student, Faculty, Room, Course, Task, Module, StudentEvent, FacultyEvent } = require('../model');
+const { Student, Faculty, Room, Course, Task, Module, StudentEvent, FacultyEvent, Feedback } = require('../model');
 
 import { typeDefs as studentTypeDefs, resolvers as studentResolvers } from './types/Student.js';
 import { typeDefs as courseTypeDefs, resolvers as courseResolvers } from './types/Course.js';
@@ -13,8 +13,10 @@ import { typeDefs as deviceTypeDefs, resolvers as deviceResolvers } from './type
 import { typeDefs as taskTypeDefs, resolvers as taskResolvers } from './types/Task.js';
 import  { typeDefs as moduleDataTypeDefs, resolvers as moduleDataResolvers } from './types/ModuleData.js';
 import { typeDefs as moduleTypeDefs, resolvers as moduleResolvers, eventCallbacks as moduleEventCallbacks } from './types/Modules.js';
+import { typeDefs as feedbackTypeDefs, resolvers as feedbackResolvers } from './types/Feedback.js';
 
 import { EVENT_ADDED, EVENT_UPDATED, EVENT_DELETED, EVENT_TEST_RESULT, EVENT_QUESTION_BATCH, ROOM_ADDED, ROOM_REMOVED, ROOM_UPDATED, TASK_UPDATE } from '../constants.js';
+import e from 'express';
 
 const pubsub = new PubSub();
 
@@ -44,6 +46,7 @@ const typeDefs = gql`
     AllStudents: [Student!]!
     RegisteredStudents (Course_id: ID!): [Student!]!
     Faculty: Faculty!
+    Feedback: Feedback
     Room (_id: ID, Name: String, Course_id: ID): Room!
     AllRooms: [Room]
     AvailableRooms: [Room]
@@ -69,6 +72,7 @@ const typeDefs = gql`
     StopTask (_id: ID!): Task!
     RegisterStudents (input: RegisterStudentsInput!): [Student!]!
     AddEvent(Task_id: ID!, input: AddEventInput!): Event!
+    GiveFeedback(Ratings: [Int!]!): Feedback!
   }
 
   type Subscription {
@@ -149,6 +153,18 @@ const resolvers = {
           Column: lastSeat.Column,
           Course: (lastSeat.Course) ? await Course.findOne({ _id: lastSeat.Course._id }) : null
         };
+      }
+    },
+    async Feedback(parent, args, context, info) {
+      let feedback, userType;
+      if (context.client) {
+        if (context.client.type === "Faculty") {
+          userType = "Faculty"
+        } else {
+          userType = "Student"
+        }
+        feedback = await Feedback.findOne({ "Account._id": context.client._id, "Account.Type": userType });
+        return feedback;
       }
     }
   },
@@ -354,6 +370,32 @@ const resolvers = {
         pubsub.publish(EVENT_ADDED, { eventSub: event });
         return event.save();
       }
+    },
+    async GiveFeedback (parent, args, context, info) {
+      let feedback = null, userType;
+      if (context.client) {
+        if (context.client.type === 'faculty') {
+          userType = "Faculty";
+        } else {
+          userType = "Student";
+        }
+
+        feedback = await Feedback.findOne({ 'Account._id': context.client._id, 'Account.Type': userType });
+
+        if (feedback) {
+          feedback.Ratings = args.Ratings;
+        } else {
+          feedback = new Feedback({
+            Account: {
+              Type: userType,
+              _id: context.client._id
+            },
+            Ratings: args.Ratings
+          });
+        }
+        await feedback.save();
+        return feedback;
+      }
     }
   },
   Subscription: {
@@ -400,7 +442,8 @@ module.exports = {
     deviceTypeDefs,
     taskTypeDefs,
     moduleDataTypeDefs,
-    moduleTypeDefs
+    moduleTypeDefs,
+    feedbackTypeDefs
   ],
   resolvers: merge(
     resolvers,
@@ -411,6 +454,7 @@ module.exports = {
     deviceResolvers,
     taskResolvers,
     moduleDataResolvers,
-    moduleResolvers
+    moduleResolvers,
+    feedbackResolvers
   )
 };

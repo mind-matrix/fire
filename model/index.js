@@ -7,5 +7,6 @@ module.exports = {
     Task: require("./Task.js"),
     Module: require('./module'),
     StudentEvent: require('./StudentEvent.js'),
-    FacultyEvent: require('./FacultyEvent.js')
-}
+    FacultyEvent: require('./FacultyEvent.js'),
+    Feedback: require('./Feedback.js')
+};

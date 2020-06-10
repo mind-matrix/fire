@@ -15,7 +15,7 @@
   "dependencies": {
     "@tensorflow-models/universal-sentence-encoder": "^1.2.2",
     "@tensorflow/tfjs-node": "^1.7.4",
-    "apollo-server": "^2.9.16",
+    "apollo-server": "^2.14.2",
     "apollo-server-express": "^2.9.16",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",

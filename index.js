@@ -8,7 +8,7 @@ const fs = require('fs');
 const uniqid = require('uniqid');
 const Authorizer = require('./controller/Auth.js');
 
-const { UPLOADS_DIR, MONGODB_SERVER_URL } = require('./constants.js');
+const { UPLOADS_DIR, MONGODB_SERVER_URL, SERVER_PORT } = require('./constants.js');
 
 const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers } = require('./schema');
@@ -284,7 +284,7 @@ server.applyMiddleware({ app });
 const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
-httpServer.listen(80, () => {
+httpServer.listen(SERVER_PORT, () => {
   console.log(`Server running at ${ server.graphqlPath }`);
   console.log(`Subscription Server running at ${ server.subscriptionsPath }`);
 });

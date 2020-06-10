@@ -39,3 +39,4 @@ export const EVENT_RESOURCE_UPLOAD = 'EVENT_RESOURCE_UPLOAD';
 export const UPLOADS_DIR = 'uploads';
 
 export const MONGODB_SERVER_URL = process.env.SRV_URL;
+export const SERVER_PORT = process.env.PORT;

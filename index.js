@@ -17,8 +17,6 @@ const path = require('path');
 
 import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 
-// mongoose.connect('mongodb+srv://fire:S8i0XwsCHCxn09og@cluster0-84baf.mongodb.net/fire?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: false });
-
 mongoose.connect(MONGODB_SERVER_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const server = new ApolloServer({

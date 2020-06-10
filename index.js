@@ -8,7 +8,7 @@ const fs = require('fs');
 const uniqid = require('uniqid');
 const Authorizer = require('./controller/Auth.js');
 
-const { UPLOADS_DIR } = require('./constants.js');
+const { UPLOADS_DIR, MONGODB_SERVER_URL } = require('./constants.js');
 
 const { ApolloServer } = require('apollo-server-express');
 const { typeDefs, resolvers } = require('./schema');
@@ -19,7 +19,7 @@ import { express as voyagerMiddleware } from 'graphql-voyager/middleware'
 
 // mongoose.connect('mongodb+srv://fire:S8i0XwsCHCxn09og@cluster0-84baf.mongodb.net/fire?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: false });
 
-mongoose.connect('mongodb://localhost:27017/fire', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(MONGODB_SERVER_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const server = new ApolloServer({
   typeDefs,
@@ -86,6 +86,8 @@ app.use(cors());
 
 app.use(bodyParser.json());
 app.use(compression());
+
+app.use(express.static('public'));
 
 app.get('/susreport/basic', async (req, res) => {
   let feedbacks = await Feedback.find({});

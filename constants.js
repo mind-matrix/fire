@@ -1,3 +1,4 @@
+require('dotenv').config();
 
 export const TASK_UPDATE = 'TASK_UPDATE';
   
@@ -36,3 +37,5 @@ export const EVENT_SUBMIT_ANSWER = 'EVENT_SUBMIT_ANSWER';
 export const EVENT_RESOURCE_UPLOAD = 'EVENT_RESOURCE_UPLOAD';
 
 export const UPLOADS_DIR = 'uploads';
+
+export const MONGODB_SERVER_URL = process.env.SRV_URL;

@@ -1,0 +1,53 @@
+h1,h2,h3,h4,h5,h6,label {
+    color:#34495e;
+}
+.parallax-bg {
+    overflow: hidden;
+    width: 100%;
+    height: 88%;
+    top: 0;
+    left: 0;
+    position: fixed !important;
+}
+.head-section {
+    margin: auto;
+    position: absolute;
+    top: 100px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    text-align: center;
+    text-transform: uppercase;
+}
+.parallax-fg {
+    position: absolute;
+    top: 87%;
+    width: 100%;
+    min-height: 12%;
+    z-index: 2;
+}
+.pure-button-theme {
+    background: white !important;
+    color: #d6341f !important;
+    border-radius: 5px !important;
+    font-size: 120% !important;
+}
+.pure-button-theme-alt {
+    background: #d8412d !important;
+    color: white !important;
+    border-radius: 5px !important;
+    font-size: 120% !important;
+}
+.animated-bg-red {
+    background-color:#d6341f;
+    animation: flame 2s ease-in-out 0s infinite alternate;
+}
+
+@keyframes flame {
+    from {
+        background-color:#d6341f;
+    }
+    to {
+        background-color:#dd5432;
+    }
+}
